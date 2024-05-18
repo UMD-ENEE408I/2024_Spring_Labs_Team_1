@@ -9,13 +9,14 @@
 #include "heltec_wifi.hpp"
 
 int state;
+String client_rx_buff = "";
 
 void setup() {
   Serial.begin(115200);
 
   movement_Init();
   // heltec_espnow_Init();
-  // wifi_Init();
+  wifi_Init();
 
   M1_stop();
   M2_stop();
@@ -111,14 +112,14 @@ void loop() {
       do {
         delay(10);
         updateLineFollow(-10);
-      } while(lineArray[12] == 0 && lineArray[0] == 0);
+      } while(lineArray[12] == 0 || lineArray[0] == 0);
       M1_stop();
       M2_stop();
       delay(100);
 
 
       // transition
-      transition_left(550);
+      transition_left(500);
       state = 2;
       delay(100);
 
@@ -152,7 +153,7 @@ void loop() {
       turnAngle(80);
       delay(100);
 
-      moveForwardDist(true, 2300);
+      moveForwardDist(true, 2350);
       delay(100);
       
 
@@ -223,25 +224,36 @@ void loop() {
       } while(lineArray[0] == 0);
       M1_stop();
       M2_stop();
-      delay(2000);    // TODO listen Left
+      client_Init();
+      String client_tx_buff = "Dual fates left";
+      client_write(client_tx_buff);
+      client_stop();
+      delay(7000);    
 
       turnAngle(-180);
       delay(100);
 
       do {
         delay(10);
-        updateLineFollow(0);
+        updateLineFollow(-5);
       } while(lineArray[12] == 0);
       M1_stop();
       M2_stop();
-      delay(2000);    // TODO listen right
+      client_Init();
+      client_tx_buff = "Dual fates right";
+      client_write(client_tx_buff);
+      client_stop();
+      delay(7000);
 
 
-      while(0); //TODO wait for information
+      client_Init();
+      client_tx_buff = "Dual fates result";
+      client_write(client_tx_buff);
+      while(!(client_read(&client_rx_buff))) delay(100);
+      client_stop();
 
 
-
-      if(1) {           // left
+      if (!client_rx_buff.compareTo("Left")) {           // left
         turnAngle(180);
         delay(100);
 
@@ -254,7 +266,7 @@ void loop() {
 
         do {
           delay(10);
-          updateLineFollow(0);
+          updateLineFollow(-5);
         } while(lineArray[0] == 0);
         turnAngle(-90);
         delay(100);
@@ -268,12 +280,13 @@ void loop() {
 
 
       } else {          // right
+        moveForwardDist(true, 150);
         turnAngle(90);
         delay(100);
 
         do {
           delay(10);
-          updateLineFollow(0);
+          updateLineFollow(-5);
         } while(lineArray[12] == 0);
         turnAngle(90);
         delay(100);

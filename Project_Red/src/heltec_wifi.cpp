@@ -12,10 +12,8 @@
 const char *ssid = "carpeted-kitchen";
 const char *password = "czkm443@";
 
-const char *serverName = "198.162.46.240";
-const int serverPort = 80;
-
-String client_rx_buff = "";
+const char *serverName = "192.168.50.186";
+const int serverPort = 8090;
 
 // Set web server port number to 80
 WiFiServer server(serverPort);
@@ -49,10 +47,11 @@ void wifi_Init() {
   // Connect to Wi-Fi network with SSID and password
   WiFi.begin(ssid, password);
   while(WiFi.status() != WL_CONNECTED) {
-    delay(500);
+    delay(1000);
     #ifdef TERM
     Serial.print(".");
     #endif
+    // WiFi.begin(ssid, password);
   }
 
   // Print local IP address
@@ -104,6 +103,9 @@ void client_Init() {
   #endif
 }
 
+void client_stop() {
+  client.stop();
+}
 
 
 /*
@@ -167,47 +169,47 @@ int client_read(String *client_rx_buff) {
  * Write data to client
  */
 void client_write(String client_tx_buff) {
-  client.println(client_tx_buff);
+  client.print(client_tx_buff);
   client.flush();
 }
 
 
-void handle_wifi() {
-  client_read(&client_rx_buff);
+// void handle_wifi() {
+//   client_read(&client_rx_buff);
 
-  switch(client_rx_buff[1]) {
-    case 'm':
-      espMessageDataTx.maze_obsticle = 1;
-      break;
-    case 'd':
-      espMessageDataTx.dualFates_rdy = 1;
-      if(client_rx_buff[2] == 'l') {
-        espMessageDataTx.dualFates_val = 0;
-      } else if(client_rx_buff[2] == 'r') {
-        espMessageDataTx.dualFates_val = 1;
-      } else {
-        //error
-      }
-      break;
-    default:
-      //error
-      break;
-  }
+//   switch(client_rx_buff[1]) {
+//     case 'm':
+//       espMessageDataTx.maze_obsticle = 1;
+//       break;
+//     case 'd':
+//       espMessageDataTx.dualFates_rdy = 1;
+//       if(client_rx_buff[2] == 'l') {
+//         espMessageDataTx.dualFates_val = 0;
+//       } else if(client_rx_buff[2] == 'r') {
+//         espMessageDataTx.dualFates_val = 1;
+//       } else {
+//         //error
+//       }
+//       break;
+//     default:
+//       //error
+//       break;
+//   }
 
-  switch(client_rx_buff[0]) {
-    case 'r':
-      // handle dual fates
-      break;
-    case 'g':
-      esp_now_send(broadcastAddr_A, (uint8_t *) &espMessageDataTx, sizeof(espMessageDataTx));
-      break;
-    case 'b':
-      esp_now_send(broadcastAddr_S, (uint8_t *) &espMessageDataTx, sizeof(espMessageDataTx));
-      break;
-    default:
-      //error
-      break;
-  } 
-  espMessageDataTx.maze_obsticle = 0;
-  espMessageDataTx.dualFates_rdy = 0;
-}
+//   switch(client_rx_buff[0]) {
+//     case 'r':
+//       // handle dual fates
+//       break;
+//     case 'g':
+//       esp_now_send(broadcastAddr_A, (uint8_t *) &espMessageDataTx, sizeof(espMessageDataTx));
+//       break;
+//     case 'b':
+//       esp_now_send(broadcastAddr_S, (uint8_t *) &espMessageDataTx, sizeof(espMessageDataTx));
+//       break;
+//     default:
+//       //error
+//       break;
+//   } 
+//   espMessageDataTx.maze_obsticle = 0;
+//   espMessageDataTx.dualFates_rdy = 0;
+// }

@@ -26,6 +26,7 @@ extern WiFiClient client;
 void wifi_Init();
 void server_Init();
 void client_Init();
+void client_stop();
 
 
 /*
