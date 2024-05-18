@@ -3,7 +3,7 @@ import time
 
 # server constants
 HOST = "127.0.0.1"  # Standard loopback interface address (localhost)
-PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
+PORT = 8090  # Port to listen on (non-privileged ports are > 1023)
 
 DUAL_FATES_LEFT = b"Dual fates left"
 DUAL_FATES_RIGHT = b"Dual fates right"

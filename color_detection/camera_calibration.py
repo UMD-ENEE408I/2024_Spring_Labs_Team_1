@@ -33,7 +33,7 @@ def show_contours(frame, points):
 
     mask = cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR)
 
-    return cv2.drawContours(mask, cnts, -1, (0, 255, 0), -1)
+    return cv2.drawContours(mask, cnts, -1, (255, 0, 0), -1)
 
 
 def main():
@@ -54,7 +54,7 @@ def main():
 
         # Show bounding box
         image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-        image = show_contours(image, colors["green"])
+        image = show_contours(image, colors["blue"])
         image = cv2.rectangle(image, BOX_START, BOX_END, (0, 255, 255), 10)
 
         cv2.imshow(

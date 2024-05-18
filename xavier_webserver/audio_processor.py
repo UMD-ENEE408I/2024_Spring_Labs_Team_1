@@ -33,6 +33,7 @@ class PowerCalculator:
             ):
                 self.indexes.append(i)
 
+        print(len(self.indexes))
         if len(self.indexes) != 1:
             raise SystemExit("Incorrect number of microphones, I exit")
 

@@ -6,7 +6,7 @@ from camera_processor import is_block
 
 # server constants
 HOST = "0.0.0.0"  # Any interface b/c we need to allow for outside clients
-PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
+PORT = 8090  # Port to listen on (non-privileged ports are > 1023)
 
 # Define the message names
 # Putting these up top for documentation since the robots will need to match them
@@ -50,19 +50,26 @@ def main():
             with conn:
                 # This is a blocking wait, we want the code to be reactive to incoming messages so good
                 # 1024 bytes arbitrary max
+                print("Received connection")
                 msg = conn.recv(1024)
+                print(f"Received request: {msg}")
 
                 # Decide what to do based on the message
                 # Would be nice to bind some callbacks or something but this whole thing is down and dirty
                 if msg == MAZE_CAM:
                     conn.send(is_block())
                 elif msg == DUAL_FATES_LEFT:
+                    print("Calculating left power")
                     left_power = powercalc.calculate_power()
-                    print(f"LEFT POWER: {left_power}")
+                    print(f"Left power: {left_power}")
                 elif msg == DUAL_FATES_RIGHT:
+                    print("Calculating right power")
                     right_power = powercalc.calculate_power()
-                    print(f"RIGHT POWER: {right_power}")
+                    print(f"Right power: {right_power}")
                 elif msg == DUAL_FATES_RESULT:
+                    print(
+                        f"Chose direction: {'Left' if left_power > right_power else 'Right'}"
+                    )
                     conn.send(b"Left" if left_power > right_power else b"Right")
                 elif msg == MAZE_DONE:
                     maze_done = True
