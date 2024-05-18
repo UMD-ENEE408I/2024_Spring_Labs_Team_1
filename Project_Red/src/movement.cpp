@@ -45,7 +45,7 @@ const unsigned int M2_IN_2_CHANNEL = 11;
 const unsigned int M1_I_SENSE = 35;
 const unsigned int M2_I_SENSE = 34;
 
-const unsigned int PWM_BASE = 90;
+const unsigned int PWM_BASE = 92;
 const unsigned int PWM_MAX = 255;
 const unsigned int PWM_MIN = 68;
 
